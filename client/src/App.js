@@ -1,17 +1,24 @@
 import React, {Component} from 'react';
-import { BrowserRouter as Router, Route} from  'react-router-dom'
+import { BrowserRouter as Router, Route, Switch} from  'react-router-dom'
 import jwt_decode from 'jwt-decode';
 import setAuthToken from './utils/setAuthToken'
 import { setCurrentUser, logoutUser } from './actions/authActions'
+import { clearCurrentProfile} from './actions/profileActions'
 import { Provider} from 'react-redux';
 import store from './store'
+
+import PrivateRoute from './Components/common/PrivateRoute';
 
 import NavBar from './Components/layout/NavBar';
 import Footer from './Components/layout/Footer';
 import Landing from './Components/layout/Landing';
 import Login from './Components/auth/Login';
 import Register from './Components/auth/Register';
-
+import Dashboard from './Components/dashboard/Dashboard';
+import CreateProfile from './Components/create-profile/CreateProfile';
+import EditProfile from './Components/edit-profile/EditProfile';
+import AddExperience from './Components/add-credentials/AddExperience';
+import AddEducation from './Components/add-credentials/AddEducation';
 
 import './App.css';
 
@@ -31,7 +38,8 @@ if(localStorage.jwtToken) {
     // Logout user
     store.dispatch(logoutUser());
 
-    //TODO: Clear current Profile
+    //Clear current Profile
+    store.dispatch(clearCurrentProfile());
     //Redirect to login
 
     window.location.href = '/login';
@@ -49,6 +57,21 @@ class App extends Component {
         <div className="container">
           <Route exact path="/register" component={Register}/>
           <Route exact path="/login" component={Login}/>
+          <Switch>
+            <PrivateRoute exact path="/dashboard" component={Dashboard}/>
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path="/create-profile" component={CreateProfile}/>
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path="/edit-profile" component={EditProfile}/>
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path="/add-experience" component={AddExperience}/>
+          </Switch>
+          <Switch>
+            <PrivateRoute exact path="/add-education" component={AddEducation}/>
+          </Switch>
         </div>
         <Footer />
       </div>
